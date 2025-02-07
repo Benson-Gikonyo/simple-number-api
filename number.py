@@ -10,6 +10,8 @@ def validate(number):
         number = int(number)
     except ValueError:
         return jsonify({"number": number, "is not a number": True}), 200
+    
+    return number
 
 # check if prime
 def is_prime(number):
@@ -86,7 +88,7 @@ def get_properties(number):
 
 
 @app.route('/api/classify-number', methods=['GET'])
-def classify_number(number):
+def classify_number(number):    
     # response
     response_data = {
         "number": number,
