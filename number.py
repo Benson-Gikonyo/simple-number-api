@@ -85,7 +85,7 @@ def classify_number():
     try:
         number = int(num_str)
     except ValueError:
-        return jsonify({"number": num_str, "is not a number": True}), 400
+        return jsonify({"number": num_str, "is not a number": True}), 200
 
     # response
     response_data = {
