@@ -3,6 +3,14 @@ import requests
 
 app = Flask(__name__)
 
+def validate(number):
+    # validate number
+    num_str = request.args.get('number')
+    try:
+        number = int(number)
+    except ValueError:
+        return jsonify({"number": number, "is not a number": True}), 200
+
 # check if prime
 def is_prime(number):
     if number < 2:
@@ -78,15 +86,7 @@ def get_properties(number):
 
 
 @app.route('/api/classify-number', methods=['GET'])
-def classify_number():
-    num_str = request.args.get('number')
-
-    # validate number
-    try:
-        number = int(num_str)
-    except ValueError:
-        return jsonify({"number": num_str, "is not a number": True}), 200
-
+def classify_number(number):
     # response
     response_data = {
         "number": number,
