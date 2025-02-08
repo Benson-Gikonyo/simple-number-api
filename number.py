@@ -3,6 +3,19 @@ import requests
 
 app = Flask(__name__)
 
+
+# validate
+def validate(number):
+     # validate number
+    try:
+        number = int(number)
+        if number < 0:  # handle negative numbers
+            response =  "error: Number must be non-negative"
+    except ValueError:
+        response = "error: Invalid input, number must be an integer"
+
+    return response
+
 # check if prime
 def is_prime(number):
     if number < 2:
@@ -76,19 +89,13 @@ def get_properties(number):
 
 @app.route('/api/classify-number', methods=['GET'])
 def classify_number():
-    num_str = request.args.get('number')
+    num_str = request.args.get(number)
 
-    # validate number
-    try:
-        number = int(num_str)
-        if number < 0:  # handle negative numbers
-            return jsonify({"error": "Number must be non-negative"}), 200
-    except ValueError:
-        return jsonify({"error": "Invalid input, number must be an integer"}), 200
+   
 
     # response
     response_data = {
-        "number": number,
+        "number": validate(number),
         "is_prime": bool(is_prime(number)),
         "is_perfect": bool(is_perfect(number)),
         "properties": list(get_properties(number)),
@@ -96,7 +103,7 @@ def classify_number():
         "fun_fact": str(get_fun_fact(number))
     }
 
-    return jsonify(response_data), 200
+    return response_data, 200
 
 
 if __name__ == '__main__':
