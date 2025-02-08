@@ -24,10 +24,7 @@ def is_armstrong(number):
         sum += digit ** order
         temp //= 10
 
-    if number == sum:
-        return True
-    else:
-        return False
+    return number == sum
     
 # check if perfect
 def is_perfect(number):
