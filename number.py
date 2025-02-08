@@ -103,7 +103,7 @@ def classify_number():
         "fun_fact": str(get_fun_fact(number))
     }
 
-    return response_data, 200
+    return jsonify(response_data), 200
 
 
 if __name__ == '__main__':
