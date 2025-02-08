@@ -7,14 +7,17 @@ app = Flask(__name__)
 # validate
 def validate(number):
     num_str = request.args.get('number')
-    # if number is None: 
-    #     number = 0
+    if number is None: 
+        number = 0
     
     try:
         number = int(num_str)
+
+        if number < 0:
+            return jsonify({number}), 400
    
     except ValueError:
-        pass
+        number = 0
 
     return number
 
@@ -82,10 +85,6 @@ def get_fun_fact(number):
 #  get properties
 def get_properties(number):
     properties = []
-
-    if number < 0:
-        return ["armstrong"] if is_armstrong(number) else []
-
     if is_armstrong(number):
         properties.append("armstrong")
     
@@ -102,8 +101,6 @@ def classify_number():
     number = request.args.get('number')
 
     number  = validate(number)
-    if isinstance(number, str):
-        return jsonify({"invalid input": number}), 400
 
     # response
     response_data = {
