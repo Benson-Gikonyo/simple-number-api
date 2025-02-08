@@ -87,7 +87,7 @@ def classify_number():
         if number < 0:  # handle negative numbers
             return jsonify({"error": "Number must be non-negative"}), 200
     except ValueError:
-        return jsonify({"error": "Invalid input, number must be an integer"}), 200
+        return jsonify({"error": "Invalid input, number must be an integer"}), 400
 
     # response
     response_data = {
