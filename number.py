@@ -61,7 +61,7 @@ def get_fun_fact(number):
     if response.status_code != 200:
         return(f"Failed to retrieve data. Status code: {response.status_code}")
     
-    return (f"{response.text}")
+    return response.text
 
 #  get properties
 def get_properties(number):
@@ -74,7 +74,7 @@ def get_properties(number):
     else:
         properties.append("odd")
 
-    return str(properties)
+    return properties
 
 
 @app.route('/api/classify-number', methods=['GET'])
@@ -84,8 +84,10 @@ def classify_number():
     # validate number
     try:
         number = int(num_str)
+        if number < 0:  # handle negative numbers
+            return jsonify({"error": "Number must be non-negative"}), 200
     except ValueError:
-        return jsonify({"number": num_str, "is not a number": True}), 200
+        return jsonify({"error": "Invalid input, number must be an integer"}), 200
 
     # response
     response_data = {
