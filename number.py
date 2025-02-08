@@ -56,7 +56,7 @@ def get_fun_fact(number):
     response = requests.get(url)
 
     if response.status_code != 200:
-        return(f"Failed to retrieve data. Status code: {response.status_code}")
+        return(f"Failed to retrieve data. Status code: 200")
     
     return response.text
 
