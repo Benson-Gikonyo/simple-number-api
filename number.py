@@ -97,7 +97,7 @@ def get_properties(number):
     else:
         properties.append("odd")
 
-    return str(properties)
+    return properties
 
 
 @app.route('/api/classify-number', methods=['GET'])
@@ -111,7 +111,7 @@ def classify_number():
         "number": number,
         "is_prime": bool(is_prime(number)),
         "is_perfect": bool(is_perfect(number)),
-        "properties": list(get_properties(number)),
+        "properties": get_properties(number),
         "digit_sum": int(calc_sum(number)),
         "fun_fact": str(get_fun_fact(number))
     }
