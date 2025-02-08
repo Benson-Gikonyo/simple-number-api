@@ -10,8 +10,8 @@ def is_prime(number):
     for x in range(2, (number//2) + 1):
         if number % x == 0:
             return False
-    else:
-        return True
+
+    return True
 
 # check if armstrong
 def is_armstrong(number):
@@ -33,10 +33,10 @@ def is_perfect(number):
         if (number % x == 0):
             sum = sum + x
     
-    if sum == number:
-        return True
-    else:
+    if sum != number:
         return False
+
+    return True
 
 # calc sum
 def calc_sum(number):
@@ -48,7 +48,7 @@ def calc_sum(number):
         sum += digit
         temp //= 10
 
-    return sum
+    return int(sum)
 
 # get fun fact
 def get_fun_fact(number):
@@ -58,7 +58,7 @@ def get_fun_fact(number):
     if response.status_code != 200:
         return(f"Failed to retrieve data. Status code: 200")
     
-    return response.text
+    return str(response.text)
 
 #  get properties
 def get_properties(number):
