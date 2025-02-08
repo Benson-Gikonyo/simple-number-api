@@ -7,8 +7,8 @@ app = Flask(__name__)
 # validate
 def validate(number):
     number = request.args.get('number')
-    
-    if type(number) is not  int or number < 0:
+
+    if number is None or type(number) is not int or number < 0:
         number = 0
 
     return number
