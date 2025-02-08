@@ -12,8 +12,7 @@ def validate(number):
     
     try:
         number = int(num_str)
-        if number < 0 or number is float:
-            return jsonify ({"invalid input": number}), 200
+        
    
     except ValueError:
         pass
@@ -108,6 +107,8 @@ def classify_number():
     if isinstance(number, str):  # If validation failed (error message returned)
         return jsonify({"error": number}), 400
 
+    if number < 0 or number is float:
+        return jsonify ({"invalid input": number}), 200
 
     # response
     response_data = {
