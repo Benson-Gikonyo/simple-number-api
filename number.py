@@ -85,6 +85,10 @@ def get_fun_fact(number):
 #  get properties
 def get_properties(number):
     properties = []
+
+    if number < 0:
+        return ["armstrong"] if is_armstrong(number) else []
+
     if is_armstrong(number):
         properties.append("armstrong")
     
