@@ -6,14 +6,10 @@ app = Flask(__name__)
 
 # validate
 def validate(number):
-    num_str = request.args.get('number')
-    try:
-        number = int(number)
-        if number < 0:  # handle negative numbers
-            return "error: Number must be non-negative"
-            
-    except ValueError:
-        return "error: Invalid input, number must be an integer"
+    number = request.args.get('number')
+    
+    if type(number) is not  int or number < 0:
+        number = 0
 
     return number
 
