@@ -39,6 +39,9 @@ def is_armstrong(number):
     
 # check if perfect
 def is_perfect(number):
+    if number == 0:
+        return False
+
     sum = 0
     for x in range(1, number):
         if (number % x == 0):
@@ -96,7 +99,7 @@ def classify_number():
         "number": number,
         "is_prime": bool(is_prime(number)),
         "is_perfect": bool(is_perfect(number)),
-        "properties": list(get_properties(number)),
+        "properties": get_properties(number),
         "digit_sum": int(calc_sum(number)),
         "fun_fact": str(get_fun_fact(number))
     }
