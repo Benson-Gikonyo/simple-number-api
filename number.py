@@ -6,9 +6,17 @@ app = Flask(__name__)
 
 # validate
 def validate(number):
-    number = request.args.get('number')
+    num_str = request.args.get('number')
+    if number is None: 
+        number = 0
+    
+    try:
+        number = int(num_str)
 
-    if number is None or type(number) is not int or number < 0:
+        if number < 0:
+            return jsonify({number}), 400
+   
+    except ValueError:
         number = 0
 
     return number
