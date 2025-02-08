@@ -13,7 +13,7 @@ def validate(number):
     try:
         number = int(num_str)
         if number < 0 or number is float:
-            pass
+            return jsonify ({"invalid input": number}), 200
    
     except ValueError:
         pass
