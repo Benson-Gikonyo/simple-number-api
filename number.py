@@ -89,11 +89,11 @@ def classify_number():
     # response
     response_data = {
         "number": number,
-        "is_prime": is_prime(number),
-        "is_perfect": is_perfect(number),
-        "properties": get_properties(number),
-        "digit_sum": calc_sum(number),
-        "fun_fact": get_fun_fact(number)
+        "is_prime": bool(is_prime(number)),
+        "is_perfect": bool(is_perfect(number)),
+        "properties": list(get_properties(number)),
+        "digit_sum": int(calc_sum(number)),
+        "fun_fact": str(get_fun_fact(number))
     }
 
     return jsonify(response_data), 200
