@@ -8,12 +8,9 @@ app = Flask(__name__)
 
 CORS(app)
 
-
 # validate
 def validate(number):
     num_str = request.args.get('number')
-    # if number is None: 
-        # number = 0
 
     try:
         number = int(num_str)
@@ -45,7 +42,6 @@ def is_armstrong(number):
     sum = 0
     temp = number
 
-    
     while temp > 0:
         digit = temp % 10
         sum += digit ** order
@@ -117,12 +113,6 @@ def classify_number():
     
     number  = validate(number)
 
-    # if isinstance(number, str):  # If validation failed (error message returned)
-    #     return jsonify({"error": number}), 400
-
-    # if number < 0 or number is float:
-    #     return jsonify ({"invalid input": number}), 200
-
     # Validate the number
     number, status_code = validate(number)
 
@@ -144,10 +134,6 @@ def classify_number():
 
     return response_json, 200, {'Content-Type': 'application/json'}
 
-
-    # return jsonify(response_data), 200
-
-
 if __name__ == '__main__':
     # Run the app on a publicly accessible address
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=False, host='0.0.0.0', port=5000)
