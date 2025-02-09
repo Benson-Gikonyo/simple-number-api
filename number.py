@@ -1,42 +1,49 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS 
+from flask_cors import CORS
 import requests
-from collections import OrderedDict
-import json
+import math
+import asyncio
+import aiohttp
 
 app = Flask(__name__)
-
 CORS(app)
 
-# validate
-def validate(number):
-    num_str = request.args.get('number')
+# In-memory cache
+fun_fact_cache = {}
+prime_cache = {}
+armstrong_cache = {}
+perfect_cache = {}
 
+# Validate number
+def validate(number):
     try:
+        num_str = request.args.get('number')
         number = int(num_str)
         return number, 200
-    except ValueError:
-        try:
-            number = float(num_str)
-            number = int(number)
-            return number, 200
-        except ValueError:
-            return num_str, 400
-    
-    return number, 200
+    except (ValueError, TypeError):
+        return num_str, 400
 
-# check if prime
+# Prime check with cache
 def is_prime(number):
+    if number in prime_cache:
+        return prime_cache[number]
+    
     if number < 2 or type(number) is float:
+        prime_cache[number] = False
         return False
-    for x in range(2, (number//2) + 1):
+    for x in range(2, int(math.sqrt(number)) + 1):
         if number % x == 0:
+            prime_cache[number] = False
             return False
-
+    
+    prime_cache[number] = True
     return True
 
-# check if armstrong
+# Armstrong check with cache
 def is_armstrong(number):
+    if number in armstrong_cache:
+        return armstrong_cache[number]
+
     number = abs(number)
     order = len(str(number))
     sum = 0
@@ -46,63 +53,51 @@ def is_armstrong(number):
         digit = temp % 10
         sum += digit ** order
         temp //= 10
+        if sum > number:
+            armstrong_cache[number] = False
+            return False
 
-    if number != sum:
-        return False
+    armstrong_cache[number] = (number == sum)
+    return armstrong_cache[number]
 
-    return True
-    
-# check if perfect
+# Perfect number check with cache
 def is_perfect(number):
-    if number == 0 or type(number) is float:
-        return False
-
-    sum = 0
-    for x in range(1, number):
-        if (number % x == 0):
-            sum = sum + x
+    if number in perfect_cache:
+        return perfect_cache[number]
     
-    if sum != number:
+    if number <= 0 or type(number) is float:
+        perfect_cache[number] = False
         return False
 
-    return True
+    sum = 1  # Start from 1 as it's always a divisor
+    for i in range(2, int(math.sqrt(number)) + 1):
+        if number % i == 0:
+            sum += i
+            if i != number // i:  # Avoid adding square roots twice
+                sum += number // i
 
-# calc sum
-def calc_sum(number):
-    number = abs(number)
-    sum = 0
-    temp = number
+    perfect_cache[number] = (sum == number)
+    return perfect_cache[number]
 
-    while temp > 0:
-        digit = temp % 10
-        sum += digit
-        temp //= 10
+# Async version of fun fact
+async def get_fun_fact_async(number):
+    if number in fun_fact_cache:
+        return fun_fact_cache[number]
+    
+    async with aiohttp.ClientSession() as session:
+        url = f"http://numbersapi.com/{number}/math"
+        async with session.get(url) as response:
+            if response.status != 200:
+                return "Failed to retrieve data. Status code: 200"
+            fact = await response.text()
+            fun_fact_cache[number] = fact
+            return fact
 
-    return int(sum)
-
-# get fun fact
+# Wrapper for async function
 def get_fun_fact(number):
-    url = f"http://numbersapi.com/{number}/math"
-    response = requests.get(url)
-
-    if response.status_code != 200:
-        return(f"Failed to retrieve data. Status code: 200")
-    
-    return str(response.text)
-
-#  get properties
-def get_properties(number):
-    properties = []
-    if is_armstrong(number):
-        properties.append("armstrong")
-    
-    if number % 2 == 0:
-        properties.append("even")
-    else:
-        properties.append("odd")
-
-    return properties
-
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+    return loop.run_until_complete(get_fun_fact_async(number))
 
 @app.route('/api/classify-number', methods=['GET'])
 def classify_number():
@@ -111,27 +106,21 @@ def classify_number():
     if not number:
         return jsonify({"error": True, "number": ""}), 400
 
-    # Validate the number
     number, status_code = validate(number)
 
     if status_code == 400:
         return jsonify({"error": True, "number": number}), 400
 
+    response_data = {
+        "number": number,
+        "is_prime": is_prime(number),
+        "is_perfect": is_perfect(number),
+        "properties": ["even" if number % 2 == 0 else "odd", "armstrong" if is_armstrong(number) else "not_armstrong"],
+        "digit_sum": calc_sum(number),
+        "fun_fact": get_fun_fact(number)
+    }
 
-    # response
-    response_data = OrderedDict([
-        ("number", number),
-        ("is_prime", bool(is_prime(number))),
-        ("is_perfect", bool(is_perfect(number))),
-        ("properties", get_properties(number)),
-        ("digit_sum", int(calc_sum(number))),
-        ("fun_fact", str(get_fun_fact(number)))
-    ])
-
-    response_json = json.dumps(response_data)
-
-    return response_json, 200, {'Content-Type': 'application/json'}
+    return jsonify(response_data)
 
 if __name__ == '__main__':
-    # Run the app on a publicly accessible address
     app.run(debug=False, host='0.0.0.0', port=5000)
