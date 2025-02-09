@@ -40,12 +40,12 @@ def is_prime(number):
 
 # check if armstrong
 def is_armstrong(number):
+    number = abs(number)
     order = len(str(number))
     sum = 0
     temp = number
 
-    if number < 10 and number != 0 and number != 1:
-        return False    
+    
     while temp > 0:
         digit = temp % 10
         sum += digit ** order
