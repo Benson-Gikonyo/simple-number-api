@@ -1,11 +1,12 @@
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from collections import OrderedDict
+from flask import Flask, request, jsonify
+from flask_cors import CORS 
 import requests
+from collections import OrderedDict
 import json
 
-app = FastAPI()
+app = Flask(__name__)
 
+CORS(app)
 
 # validate
 def validate(number):
@@ -131,6 +132,6 @@ def classify_number():
 
     return response_json, 200, {'Content-Type': 'application/json'}
 
-# if __name__ == '__main__':
-#     # Run the app on a publicly accessible address
-#     app.run(debug=False, host='0.0.0.0', port=5000)
+if __name__ == '__main__':
+    # Run the app on a publicly accessible address
+    app.run(debug=False, host='0.0.0.0', port=5000)
