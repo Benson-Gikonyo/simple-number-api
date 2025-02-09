@@ -21,6 +21,7 @@ def validate(number):
     except ValueError:
         try:
             number = float(num_str)
+            number = int(number)
             return number, 200
         except ValueError:
             return num_str, 400
