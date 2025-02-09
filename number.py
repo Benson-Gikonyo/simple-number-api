@@ -1,5 +1,7 @@
 from flask import Flask, request, jsonify
 import requests
+from collections import OrderedDict
+import json
 
 app = Flask(__name__)
 
@@ -110,16 +112,21 @@ def classify_number():
     #     return jsonify ({"invalid input": number}), 200
 
     # response
-    response_data = {
-        "number": number,
-        "is_prime": bool(is_prime(number)),
-        "is_perfect": bool(is_perfect(number)),
-        "properties": get_properties(number),
-        "digit_sum": int(calc_sum(number)),
-        "fun_fact": str(get_fun_fact(number))
-    }
+    response_data = OrderedDict([
+        ("number", number),
+        ("is_prime", bool(is_prime(number))),
+        ("is_perfect", bool(is_perfect(number))),
+        ("properties", get_properties(number)),
+        ("digit_sum", int(calc_sum(number))),
+        ("fun_fact", str(get_fun_fact(number)))
+    ])
 
-    return jsonify(response_data), 200
+    response_json = json.dumps(response_data)
+
+    return response_json, 200, {'Content-Type': 'application/json'}
+
+
+    # return jsonify(response_data), 200
 
 
 if __name__ == '__main__':
