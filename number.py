@@ -110,8 +110,6 @@ def classify_number():
 
     if not number:
         return jsonify({"error": True, "number": ""}), 400
-    
-    number  = validate(number)
 
     # Validate the number
     number, status_code = validate(number)
