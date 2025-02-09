@@ -1,12 +1,11 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS 
-import requests
+from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 from collections import OrderedDict
+import requests
 import json
 
-app = Flask(__name__)
+app = FastAPI()
 
-CORS(app)
 
 # validate
 def validate(number):
