@@ -9,22 +9,24 @@ app = Flask(__name__)
 # validate
 def validate(number):
     num_str = request.args.get('number')
-    if number is None: 
-        number = 0
-    
+    # if number is None: 
+        # number = 0
+
     try:
         number = int(num_str)
-        
-   
+        return number, 200
     except ValueError:
-        number = 0
-
-    return number
-
+        try:
+            number = float(num_str)
+            return number, 200
+        except ValueError:
+            return num_str, 400
+    
+    return number, 200
 
 # check if prime
 def is_prime(number):
-    if number < 2:
+    if number < 2 or type(number) is float:
         return False
     for x in range(2, (number//2) + 1):
         if number % x == 0:
@@ -38,7 +40,7 @@ def is_armstrong(number):
     sum = 0
     temp = number
 
-    if number < 10 and number is not 0 and number is not 1:
+    if number < 10 and number != 0 and number != 1:
         return False    
     while temp > 0:
         digit = temp % 10
@@ -52,7 +54,7 @@ def is_armstrong(number):
     
 # check if perfect
 def is_perfect(number):
-    if number == 0:
+    if number == 0 or type(number) is float:
         return False
 
     sum = 0
@@ -67,6 +69,7 @@ def is_perfect(number):
 
 # calc sum
 def calc_sum(number):
+    number = abs(number)
     sum = 0
     temp = number
 
@@ -105,8 +108,8 @@ def get_properties(number):
 def classify_number():
     number = request.args.get('number')
 
-    # if not number:
-    #     return jsonify({"error": "No number provided"}), 400
+    if not number:
+        return jsonify({"error": True, "number": ""}), 400
     
     number  = validate(number)
 
@@ -115,6 +118,13 @@ def classify_number():
 
     # if number < 0 or number is float:
     #     return jsonify ({"invalid input": number}), 200
+
+    # Validate the number
+    number, status_code = validate(number)
+
+    if status_code == 400:
+        return jsonify({"error": True, "number": number}), 400
+
 
     # response
     response_data = OrderedDict([
