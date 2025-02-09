@@ -38,12 +38,17 @@ def is_armstrong(number):
     sum = 0
     temp = number
 
+    if number < 10 and number is not 0 and number is not 1:
+        return False    
     while temp > 0:
         digit = temp % 10
         sum += digit ** order
         temp //= 10
 
-    return number == sum
+    if number != sum:
+        return False
+
+    return True
     
 # check if perfect
 def is_perfect(number):
