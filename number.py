@@ -131,6 +131,6 @@ def classify_number():
 
     return response_json, 200, {'Content-Type': 'application/json'}
 
-if __name__ == '__main__':
-    # Run the app on a publicly accessible address
-    app.run(debug=False, host='0.0.0.0', port=5000)
+# if __name__ == '__main__':
+#     # Run the app on a publicly accessible address
+#     app.run(debug=False, host='0.0.0.0', port=5000)
